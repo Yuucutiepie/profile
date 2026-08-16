@@ -1,129 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>/Yuu</title>
-
-<!-- Favicon -->
-<link rel="icon" id="dynamic-favicon" href="">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Showcase</title>
+<link id="dynamic-favicon" rel="icon" href="" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
 <!-- CSS -->
 <link rel="stylesheet" href="style.css">
-
 <!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body>
 
-<!-- =========================
-   CLICK TO ENTER
-========================= -->
-<div id="overlay">
-  <div class="click-text">c l i c k</div>
-</div>
-
-<!-- =========================
-   BACKGROUND
-========================= -->
-<div class="background-container">
-  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHgyZGRsbjE0ZDN4ejJuMWI1OW5xMmlkNm04eGFxbmQ1ZDZhbzhsbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XNPNZlxRdi4DsfmpnM/giphy.gif" alt="background">
-</div>
-
-<!-- =========================
-   MUSIC
-========================= -->
-<audio id="bg-music" loop preload="auto">
-  <source src="MOOLAH - SCOOP DOGG, DAARTH.mp3">
-</audio>
-
-<!-- =========================
-   MAIN PROFILE
-========================= -->
-<div class="main-content">
-  <div class="profile-card">
-
-    <!-- AVATAR SECTION -->
-    <div class="avatar-container">
-
-      <!-- DECORATION -->
-      <img id="discord-decoration" class="avatar-decoration" style="display:none;" alt="decoration">
-
-      <!-- AVATAR -->
-      <img id="discord-avatar" class="avatar" alt="avatar">
-
-      <!-- STATUS -->
-      <div id="status-dot" class="status-dot offline"></div>
-
-      <!-- HOVER CARD -->
-      <div class="discord-card">
-
-        <img id="card-avatar" alt="card-avatar">
-
-        <h2 id="card-name">Yuu</h2>
-        <p id="card-username">@yuutricks</p>
-
-        <p id="card-status-text" class="status-text">Offline</p>
-
-      </div>
-
-    </div>
-
-    <!-- NAME -->
-    <h1 id="display-name">Yuu</h1>
-
-    <!-- USERNAME -->
-    <p id="card-username">@yuulovesu.3</p>
-
-    <!-- NOTE (BETWEEN USERNAME & SOCIALS) -->
-    <div id="note-section" style="display:none;">
-      <p id="discord-note"></p>
-    </div>
-
-    <!-- SOCIALS -->
-    <div class="socials">
-
-      <a href="https://www.instagram.com/Yuu/" target="_blank">
-        <i class="fab fa-instagram"></i>
-      </a>
-
-      <a href="https://www.tiktok.com/@yuu.lovessu" target="_blank">
-        <i class="fab fa-tiktok"></i>
-      </a>
-
-      <a href="https://open.spotify.com/user/314ol32aed43hfelf36dewabwbbm" target="_blank">
-        <i class="fab fa-spotify"></i>
-      </a>
-
-      <a href="https://discord.com/users/1485470671126659233" target="_blank">
-        <i class="fab fa-discord"></i>
-      </a>
-
-    </div>
-
-    <!-- =========================
-         NOW PLAYING (FRAME BELOW SOCIALS)
-    ========================= -->
-    <div class="now-playing-frame">
-      <div class="now-playing-title">Now Playing</div>
-      <div class="now-playing-text"> MOOLAH</div>
-    </div>
-
-    <!-- VIEWS -->
-    <div class="view-pill">
-      Views: <span id="view-count">5871</span>
-    </div>
-
+  <!-- SPLASH / INTRO SCREEN -->
+  <div id="overlay">
+    <div class="brand-logo splash-logo" id="splash-logo-text">XOLUMS</div>
+    <div class="splash-sub">— <span id="splash-sub-text">XOLUMS WORLD</span> —</div>
   </div>
-</div>
 
-<!-- FOOTER -->
-<div class="made-by">Made By: Yuu</div>
+  <audio id="bg-music" src="music.mp3" loop></audio>
 
-<!-- SCRIPT -->
-<script src="script.js"></script>
+  <!-- TOP TABS -->
+  <div class="top-nav" id="tab-nav"></div>
+
+  <!-- PAGES (auto-generated) -->
+  <div id="pages-container"></div>
+
+  <div class="made-by">made by you</div>
+
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
 
 </body>
 </html>
