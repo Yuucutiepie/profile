@@ -1,6 +1,6 @@
 /* ============================================================
    XOLUMS CLAN ✦ ULTRA DESIGN SYSTEM (10,000,000,000x)
-   Heads (Eya & Yuu) + Hall of Fame + Members
+   Heads (Cream, Yuu & Eya) + Hall of Fame + Members
    ============================================================ */
 
 :root {
@@ -17,6 +17,8 @@
     --eya-glow: rgba(255, 126, 187, 0.35);
     --yuu-accent: #7eb4ff;
     --yuu-glow: rgba(126, 180, 255, 0.35);
+    --third-accent: #c58bff;
+    --third-glow: rgba(197, 139, 255, 0.35);
     --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -165,8 +167,8 @@ body:hover .custom-cursor { opacity: 1; }
 
 .intro-sub {
     font-family: 'Cinzel', serif;
-    font-size: 14px;
-    letter-spacing: 8px;
+    font-size: 13px;
+    letter-spacing: 6px;
     color: rgba(255, 255, 255, 0.7);
     margin-top: 14px;
     margin-bottom: 40px;
@@ -337,9 +339,9 @@ body:hover .custom-cursor { opacity: 1; }
 .main-wrapper {
     position: relative;
     z-index: 2;
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 110px 24px 140px;
+    padding: 110px 24px 160px;
     display: flex;
     flex-direction: column;
     gap: 120px;
@@ -353,6 +355,12 @@ body:hover .custom-cursor { opacity: 1; }
     width: 100%;
     position: relative;
     scroll-margin-top: 100px;
+    animation: sectionRise 0.8s var(--transition-smooth) both;
+}
+
+@keyframes sectionRise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .section-badge {
@@ -392,22 +400,33 @@ body:hover .custom-cursor { opacity: 1; }
 }
 
 /* ============================================================
-   CLAN HEADS ROW (EYA & YUU)
+   CLAN HEADS ROW (CREAM, YUU & EYA)
 ============================================================ */
 .heads-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 36px;
+    gap: 30px;
     width: 100%;
     perspective: 1200px;
 }
 
 .head-card-wrap {
-    flex: 0 1 430px;
-    max-width: 450px;
+    flex: 1 1 360px;
+    max-width: 400px;
     width: 100%;
     perspective: 1000px;
+    animation: cardDrop 0.7s var(--transition-bounce) both;
+}
+
+#wrap-cream { animation-delay: 0.05s; }
+#wrap-yuu { animation-delay: 0.15s; }
+#wrap-third { animation-delay: 0.25s; }
+
+@keyframes cardDrop {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .head-card {
@@ -422,6 +441,7 @@ body:hover .custom-cursor { opacity: 1; }
     transform-style: preserve-3d;
     transition: transform 0.4s var(--transition-smooth), border-color 0.4s ease, box-shadow 0.4s ease;
     text-align: left;
+    height: 100%;
 }
 
 .head-card:hover {
@@ -429,7 +449,6 @@ body:hover .custom-cursor { opacity: 1; }
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
-#wrap-eya .head-card:hover,
 #wrap-cream .head-card:hover {
     border-color: rgba(255, 126, 187, 0.35);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px var(--eya-glow);
@@ -438,6 +457,11 @@ body:hover .custom-cursor { opacity: 1; }
 #wrap-yuu .head-card:hover {
     border-color: rgba(126, 180, 255, 0.35);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px var(--yuu-glow);
+}
+
+#wrap-third .head-card:hover {
+    border-color: rgba(197, 139, 255, 0.35);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px var(--third-glow);
 }
 
 .card-glass-sheen {
@@ -454,19 +478,44 @@ body:hover .custom-cursor { opacity: 1; }
     opacity: 1;
 }
 
-/* Card Banner */
+/* Card Banner — CSS-drawn gradient banners (no broken external images) */
 .card-banner {
     width: 100%;
     height: 195px;
-    background-size: cover;
-    background-position: center;
     position: relative;
+    overflow: hidden;
+}
+
+.card-banner::before {
+    content: '';
+    position: absolute;
+    inset: -60%;
+    background: radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.22), transparent 55%),
+                radial-gradient(circle at 72% 68%, rgba(255, 255, 255, 0.12), transparent 50%);
+    animation: bannerDrift 11s ease-in-out infinite alternate;
+}
+
+@keyframes bannerDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-5%, -5%) scale(1.18); }
+}
+
+.banner-cream {
+    background: linear-gradient(135deg, #2a0d1e 0%, #4a1030 45%, #ff7ebb 145%);
+}
+
+.banner-yuu {
+    background: linear-gradient(135deg, #0a1830 0%, #10284a 45%, #7eb4ff 145%);
+}
+
+.banner-eya {
+    background: linear-gradient(135deg, #1a0f30 0%, #2c1450 45%, #c58bff 145%);
 }
 
 .banner-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(14, 14, 18, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(14, 14, 18, 0.95) 100%);
 }
 
 .card-rank-tag {
@@ -488,9 +537,7 @@ body:hover .custom-cursor { opacity: 1; }
     gap: 6px;
 }
 
-.eya-rank,
-.cream-rank,
-.Cream-rank {
+.eya-rank {
     border-color: rgba(255, 126, 187, 0.4);
     color: var(--eya-accent);
 }
@@ -498,6 +545,11 @@ body:hover .custom-cursor { opacity: 1; }
 .yuu-rank {
     border-color: rgba(126, 180, 255, 0.4);
     color: var(--yuu-accent);
+}
+
+.third-rank {
+    border-color: rgba(197, 139, 255, 0.4);
+    color: var(--third-accent);
 }
 
 /* Avatar & Presence */
@@ -520,14 +572,16 @@ body:hover .custom-cursor { opacity: 1; }
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
 }
 
-.eya-ring,
-.cream-ring,
-.Cream-ring {
+.eya-ring {
     background: linear-gradient(135deg, #ffffff, var(--eya-accent));
 }
 
 .yuu-ring {
     background: linear-gradient(135deg, #ffffff, var(--yuu-accent));
+}
+
+.third-ring {
+    background: linear-gradient(135deg, #ffffff, var(--third-accent));
 }
 
 .avatar-img {
@@ -601,6 +655,7 @@ body:hover .custom-cursor { opacity: 1; }
     align-items: center;
     gap: 10px;
     margin-bottom: 2px;
+    flex-wrap: wrap;
 }
 
 .display-name {
@@ -622,9 +677,7 @@ body:hover .custom-cursor { opacity: 1; }
     color: rgba(255, 255, 255, 0.8);
 }
 
-.eya-badge,
-.cream-badge,
-.Cream-badge {
+.eya-badge {
     background: rgba(255, 126, 187, 0.12);
     border-color: rgba(255, 126, 187, 0.3);
     color: var(--eya-accent);
@@ -634,6 +687,12 @@ body:hover .custom-cursor { opacity: 1; }
     background: rgba(126, 180, 255, 0.12);
     border-color: rgba(126, 180, 255, 0.3);
     color: var(--yuu-accent);
+}
+
+.third-badge {
+    background: rgba(197, 139, 255, 0.12);
+    border-color: rgba(197, 139, 255, 0.3);
+    color: var(--third-accent);
 }
 
 .username-tag {
@@ -1179,7 +1238,7 @@ body:hover .custom-cursor { opacity: 1; }
     bottom: 24px;
     left: 28px;
     right: 28px;
-    max-width: 680px;
+    max-width: 720px;
     margin: 0 auto;
     background: rgba(12, 12, 16, 0.85);
     backdrop-filter: blur(20px);
@@ -1621,10 +1680,22 @@ body:hover .custom-cursor { opacity: 1; }
 /* ============================================================
    RESPONSIVE DESIGN (MOBILE & TABLET)
 ============================================================ */
+@media (max-width: 1180px) {
+    .heads-container {
+        gap: 26px;
+    }
+    .head-card-wrap {
+        flex: 1 1 320px;
+    }
+}
+
 @media (max-width: 900px) {
     .heads-container {
         flex-direction: column;
         gap: 40px;
+    }
+    .head-card-wrap {
+        max-width: 440px;
     }
     .crest-line {
         width: 80px;
@@ -1681,6 +1752,9 @@ body:hover .custom-cursor { opacity: 1; }
     .clan-grid {
         grid-template-columns: repeat(2, 120px);
         gap: 28px 16px;
+    }
+    .hud-controls {
+        gap: 6px;
     }
 }
 
