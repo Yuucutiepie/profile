@@ -1,7 +1,7 @@
 /**
  * ============================================================
  * XCLSV CLAN ✦ ULTRA SHOWCASE JAVASCRIPT SYSTEM
- * Clan Heads (Cream & Yuu) + Hall of Fame + Members
+ * Clan Heads (Cream, Yuu & Eya) + Hall of Fame + Members
  * Real-time Discord Lanyard + 3D Tilt + Audio Changer Engine
  * ============================================================
  */
@@ -10,41 +10,38 @@ const CONFIG = {
   // BRANDING
   brand: {
     name: "XCLSV",
-    subText: "HEADS: YUU EYA CREAM",
+    subText: "HEADS: CREAM, YUU & EYA",
     navTitle: "XCLSV",
   },
 
-  // 1) CLAN HEADS (THE FOUNDERS & SUPREME LEADERS: CREAM & YUU)
+  // 1) CLAN HEADS (THE FOUNDERS & SUPREME LEADERS: CREAM, YUU & EYA)
   heads: {
     cream: {
-      discordId: "1393674906197033123", // Cream / Cwerm's Discord ID
+      discordId: "1393674906197033123",
       name: "Cwerm",
       tag: "@Cream",
       role: "Mapakla",
       badge: "Founder",
       bio: "AHHH YAMETE ✦ XCLSV Head",
-      banner: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDRtcTM1OWtvNXNta3Jrd3FmcnJtb2cya2t1NmNxeng3eXppcXdwNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/117XNEF51xu8Wk/giphy.gif",
       color: "#ff7ebb",
     },
     yuu: {
-      discordId: "1485470671126659233", // Yuu's Discord ID
+      discordId: "1485470671126659233",
       name: "Yuu",
       tag: "@yuu",
       role: "MASARAP",
       badge: "Founder",
       bio: "Commanding XCLSV with Cream ✦ Clan Head",
-      banner: "https://giphy.com/gifs/megan-katseye-dpEJBxvLQzxEaG2mZ0",
       color: "#7eb4ff",
     },
     Eya: {
-      discordId: "1478284462738505910", // Yuu's Discord ID
+      discordId: "1478284462738505910",
       name: "Eya",
       tag: "@eyaya",
       role: "MASARAP",
       badge: "BEESAYA",
       bio: "BATA LANG NAMIN",
-      banner: "https://cdn.discordapp.com/attachments/1489605577532244110/1538469508379971714/29d7b176d5dd6347db3b2aada7ad24bc.gif?ex=6a82cae2&is=6a817962&hm=cccaebdf14bde54c332b5df1c28944c508405ca3e8578dab54f679e5ab4da2c0",
-      color: "#7eb4ff",
+      color: "#c58bff",
     },
   },
 
@@ -53,37 +50,28 @@ const CONFIG = {
     { discordId: "1434524132162277409", fallbackName: "Masarap 1" },
     { discordId: "1478284462738505910", fallbackName: "Masarap 2" },
     { discordId: "1396362116243390496", fallbackName: "Masarap 3" },
-    { discordId: "0", fallbackName: "Elite 4" },
-    { discordId: "0", fallbackName: "Elite 5" },
-    { discordId: "0", fallbackName: "Elite 6" },
   ],
 
   // 3) CLAN MEMBERS (ACTIVE VANGUARD)
   members: [
     { discordId: "1482842530650525890", fallbackName: "Vanguard 1" },
     { discordId: "818729714197069845", fallbackName: "Vanguard 2" },
-    { discordId: "0", fallbackName: "Vanguard 3" },
-    { discordId: "0", fallbackName: "Vanguard 4" },
     { discordId: "1415945154438762551", fallbackName: "Vanguard 5" },
-    { discordId: "0", fallbackName: "Vanguard 6" },
   ],
 
-  // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3 / File Garden)
+  // 4) PLAYLIST CONFIGURATION — only real, reachable URLs.
+  // (local "file:///C:/..." paths were removed — those only exist on one
+  // person's computer and can never load on a live site for visitors)
   playlist: [
     {
-      title: "Sarapan",
+      title: "Addicted To You",
       artist: "Main Track",
-      src: "file:///C:/Users/kyllj/Downloads/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
+      src: "Addicted To You.mp3",
     },
     {
       title: "Molly to the Head",
       artist: "Hev Abi",
       src: "https://file.garden/aWEjqj03KS-m2Cfz/arcs/Hev%20Abi%20-%20molly%20to%20the%20head%20freestyle.mp3",
-    },
-    {
-      title: "SARAPAN",
-      artist: "Yuu SARAP",
-      src: "file:///C:/Users/kyllj/Downloads/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
     },
     {
       title: "Midnight Lo-Fi Chill",
@@ -96,22 +84,21 @@ const CONFIG = {
 (function () {
   "use strict";
 
-  // Collect all unique Discord IDs safely
+  // A Discord snowflake is a plain string of digits, usually 17-19 chars long.
+  // Placeholder values like "0" or empty strings are ignored so we never
+  // waste a request (and never spam errors) on a fake ID.
+  function isValidDiscordId(id) {
+    return typeof id === "string" && /^\d{5,}$/.test(id) && id !== "0";
+  }
+
+  // Collect all unique, valid Discord IDs safely
   const allDiscordIds = [];
-  Object.keys(CONFIG.heads).forEach((k) => {
-    const id = CONFIG.heads[k]?.discordId;
-    if (id && !allDiscordIds.includes(id)) allDiscordIds.push(id);
-  });
-  if (Array.isArray(CONFIG.hallOfFame)) {
-    CONFIG.hallOfFame.forEach((m) => {
-      if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
-    });
+  function addId(id) {
+    if (isValidDiscordId(id) && !allDiscordIds.includes(id)) allDiscordIds.push(id);
   }
-  if (Array.isArray(CONFIG.members)) {
-    CONFIG.members.forEach((m) => {
-      if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
-    });
-  }
+  Object.keys(CONFIG.heads).forEach((k) => addId(CONFIG.heads[k]?.discordId));
+  if (Array.isArray(CONFIG.hallOfFame)) CONFIG.hallOfFame.forEach((m) => addId(m.discordId));
+  if (Array.isArray(CONFIG.members)) CONFIG.members.forEach((m) => addId(m.discordId));
 
   /* ============================================================
      1) DYNAMIC RENDER OF HALL OF FAME & MEMBERS GRIDS
@@ -263,7 +250,6 @@ const CONFIG = {
         y: Math.random() * height,
         size: Math.random() * 1.8 + 0.5,
         baseAlpha: Math.random() * 0.6 + 0.2,
-        alpha: 0.5,
         speedX: (Math.random() - 0.5) * 0.2,
         speedY: (Math.random() - 0.5) * 0.2,
         twinkleSpeed: Math.random() * 0.03 + 0.01,
@@ -301,6 +287,12 @@ const CONFIG = {
       grad2.addColorStop(0, "rgba(126, 180, 255, 0.03)");
       grad2.addColorStop(1, "transparent");
       ctx.fillStyle = grad2;
+      ctx.fillRect(0, 0, width, height);
+
+      const grad3 = ctx.createRadialGradient(width * 0.5, height * 0.85, 10, width * 0.5, height * 0.85, width * 0.4);
+      grad3.addColorStop(0, "rgba(197, 139, 255, 0.025)");
+      grad3.addColorStop(1, "transparent");
+      ctx.fillStyle = grad3;
       ctx.fillRect(0, 0, width, height);
 
       // Draw particle stars
@@ -413,6 +405,7 @@ const CONFIG = {
      6) AUDIO PLAYER & PLAYLIST CHANGER ENGINE
   ============================================================ */
   let currentTrackIndex = 0;
+  let autoAdvancing = false; // guards against error-loops when every track fails
   const audio = document.getElementById("bgMusic");
   const playBtn = document.getElementById("hud-play-btn");
   const playIcon = document.getElementById("hud-play-icon");
@@ -429,6 +422,8 @@ const CONFIG = {
   const waveform = document.getElementById("hud-waveform");
   const playlistContainer = document.getElementById("preset-track-list");
   const musicModal = document.getElementById("music-modal");
+  const prevBtn = document.getElementById("hud-prev-btn");
+  const nextBtn = document.getElementById("hud-next-btn");
 
   function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -455,9 +450,26 @@ const CONFIG = {
     if (autoPlay) {
       audio
         .play()
-        .then(() => updatePlayState(true))
+        .then(() => {
+          autoAdvancing = false;
+          updatePlayState(true);
+        })
         .catch(() => updatePlayState(false));
     }
+  }
+
+  function playNextTrack(auto = false) {
+    if (!CONFIG.playlist || CONFIG.playlist.length === 0) return;
+    const nextIndex = (currentTrackIndex + 1) % CONFIG.playlist.length;
+    loadTrack(nextIndex, true);
+    if (!auto) showToast(`Playing "${CONFIG.playlist[nextIndex].title}"`);
+  }
+
+  function playPrevTrack() {
+    if (!CONFIG.playlist || CONFIG.playlist.length === 0) return;
+    const prevIndex = (currentTrackIndex - 1 + CONFIG.playlist.length) % CONFIG.playlist.length;
+    loadTrack(prevIndex, true);
+    showToast(`Playing "${CONFIG.playlist[prevIndex].title}"`);
   }
 
   function updatePlayState(isPlaying) {
@@ -511,8 +523,9 @@ const CONFIG = {
     renderPlaylistModal();
 
     if (playBtn) playBtn.addEventListener("click", togglePlay);
+    if (nextBtn) nextBtn.addEventListener("click", () => playNextTrack(false));
+    if (prevBtn) prevBtn.addEventListener("click", playPrevTrack);
 
-    // Audio timeupdate
     if (audio) {
       audio.addEventListener("timeupdate", () => {
         if (audio.duration) {
@@ -521,6 +534,16 @@ const CONFIG = {
           if (timeCurrent) timeCurrent.textContent = formatTime(audio.currentTime);
           if (timeDuration) timeDuration.textContent = formatTime(audio.duration);
         }
+      });
+
+      // If a track fails to load (missing file, dead link, blocked CORS…)
+      // don't just sit there silently — tell the user and try the next one.
+      audio.addEventListener("error", () => {
+        if (autoAdvancing) return; // avoid an infinite loop if nothing plays
+        autoAdvancing = true;
+        const failed = CONFIG.playlist[currentTrackIndex];
+        showToast(`Couldn't load "${failed ? failed.title : "track"}" — skipping`);
+        setTimeout(() => playNextTrack(true), 400);
       });
     }
 
@@ -659,7 +682,6 @@ const CONFIG = {
     Object.keys(CONFIG.heads).forEach((headKey) => {
       const headConfig = CONFIG.heads[headKey];
       if (headConfig && headConfig.discordId === id) {
-        // Map to normalized IDs (e.g. cream / yuu)
         const key = headKey.toLowerCase();
 
         const avEl = document.getElementById(`avatar-${key}`);
@@ -737,7 +759,6 @@ const CONFIG = {
     document.querySelectorAll(`.clan-slot[data-discord="${id}"]`).forEach((slot) => {
       const slotId = slot.id.replace("fame-slot-", "fame-").replace("member-slot-", "member-");
 
-      // Circular Ring
       const innerAv = document.getElementById(`eavatar-${slotId}`);
       if (innerAv) innerAv.style.backgroundImage = `url('${av}')`;
 
@@ -750,7 +771,6 @@ const CONFIG = {
       const label = document.getElementById(`elabel-${slotId}`);
       if (label) label.textContent = displayName;
 
-      // Decoration
       if (u.avatar_decoration_data?.asset) {
         const dUrl = decoUrl(u.avatar_decoration_data.asset);
         const edeco = document.getElementById(`edeco-${slotId}`);
@@ -765,7 +785,6 @@ const CONFIG = {
         }
       }
 
-      // Popup content
       const pbanner = document.getElementById(`epbanner-${slotId}`);
       if (pbanner) {
         if (u.banner) {
@@ -803,7 +822,6 @@ const CONFIG = {
         pstatus.textContent = textMap[status] || "Offline";
       }
 
-      // Activity / Spotify in popup
       const pact = document.getElementById(`epact-${slotId}`);
       const pactname = document.getElementById(`epactname-${slotId}`);
       if (pact && pactname) {
@@ -943,7 +961,8 @@ const CONFIG = {
       entered = true;
       intro.classList.add("exit");
 
-      // Start audio smoothly
+      // Start audio smoothly (this runs inside a user gesture, so autoplay
+      // restrictions won't block it)
       if (audio) {
         audio.volume = 0.85;
         audio
