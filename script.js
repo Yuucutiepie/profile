@@ -64,14 +64,14 @@ const CONFIG = {
   // person's computer and can never load on a live site for visitors)
   playlist: [
     {
-      title: "Addicted To You",
-      artist: "Main Track",
-      src: "Addicted To You.mp3",
-    },
-    {
       title: "Molly to the Head",
       artist: "Hev Abi",
       src: "https://file.garden/aWEjqj03KS-m2Cfz/arcs/Hev%20Abi%20-%20molly%20to%20the%20head%20freestyle.mp3",
+    },
+    {
+      title: "Addicted To You",
+      artist: "Main Track",
+      src: "Addicted To You.mp3",
     },
     {
       title: "Midnight Lo-Fi Chill",
