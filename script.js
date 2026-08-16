@@ -27,7 +27,7 @@ const CONFIG = {
       color: "#ff7ebb",
     },
     yuu: {
-      discordId: "1496377821076127774", // Yuu's Discord ID
+      discordId: "1485470671126659233", // Yuu's Discord ID
       name: "Yuu",
       tag: "@yuu",
       role: "MASARAP",
@@ -42,20 +42,20 @@ const CONFIG = {
   hallOfFame: [
     { discordId: "1390873845279232110", fallbackName: "Masarap 1" },
     { discordId: "1478284462738505910", fallbackName: "Masarap 2" },
-    { discordId: "1487431375106740255", fallbackName: "Masarap 3" },
-    { discordId: "806491799626711060", fallbackName: "Elite 4" },
-    { discordId: "1327220072481165346", fallbackName: "Elite 5" },
-    { discordId: "1518182598189387837", fallbackName: "Elite 6" },
+    { discordId: "0", fallbackName: "Masarap 3" },
+    { discordId: "0", fallbackName: "Elite 4" },
+    { discordId: "0", fallbackName: "Elite 5" },
+    { discordId: "0", fallbackName: "Elite 6" },
   ],
 
   // 3) CLAN MEMBERS (ACTIVE VANGUARD)
   members: [
     { discordId: "1482842530650525890", fallbackName: "Vanguard 1" },
     { discordId: "818729714197069845", fallbackName: "Vanguard 2" },
-    { discordId: "1500803765853360278", fallbackName: "Vanguard 3" },
-    { discordId: "1311163736635211826", fallbackName: "Vanguard 4" },
+    { discordId: "0", fallbackName: "Vanguard 3" },
+    { discordId: "0", fallbackName: "Vanguard 4" },
     { discordId: "1415945154438762551", fallbackName: "Vanguard 5" },
-    { discordId: "1362421736079102122", fallbackName: "Vanguard 6" },
+    { discordId: "0", fallbackName: "Vanguard 6" },
   ],
 
   // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3 / File Garden)
