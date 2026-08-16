@@ -9,108 +9,186 @@ body {
   background: #000;
   color: #fff;
   font-family: monospace;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* =========================
-   BACKGROUND
+   LOGO FONT (jagged/scratchy)
 ========================= */
-.background-container {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-}
-
-.background-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(35%) grayscale(100%);
+.brand-logo {
+  font-family: 'Nosifer', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #f2f2f2;
+  text-shadow: 0 0 18px rgba(255,255,255,0.25);
 }
 
 /* =========================
-   CLICK OVERLAY
+   INTRO / SPLASH SCREEN
 ========================= */
 #overlay {
   position: fixed;
   inset: 0;
   background: #000;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 999;
 }
 
-.click-text {
-  letter-spacing: 10px;
-  font-size: 14px;
-  opacity: 0.7;
-  animation: breathe 2s infinite;
+#overlay::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%);
+  z-index: -1;
+}
+
+.splash-logo {
+  font-size: 42px;
+}
+
+.splash-sub {
+  margin-top: 26px;
+  letter-spacing: 8px;
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+/* =========================
+   TOP NAV (TABS TOP-RIGHT)
+========================= */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 26px;
+  padding: 22px 30px;
+  z-index: 40;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.5;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: 0.2s ease;
+}
+
+.tab-btn:hover {
+  opacity: 0.8;
+}
+
+.tab-btn.active {
+  opacity: 1;
+  border-bottom: 1px solid #fff;
 }
 
 /* =========================
    MAIN LAYOUT
 ========================= */
-.main-content {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
-  padding: 45px;
-  border-radius: 20px;
-  text-align: center;
-  min-width: 320px;
-}
-
-/* =========================
-   AVATAR SYSTEM
-========================= */
-.avatar-container {
+.page {
+  display: none;
+  padding: 110px 20px 80px;
   position: relative;
-  width: 130px;
-  height: 130px;
+}
+
+.page.active {
+  display: block;
+}
+
+.page-logo {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 50px;
+}
+
+.card-grid {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-/* DECORATION (FIXED LAYER ORDER) */
-.avatar-decoration {
+/* decorative diagonal glow streak behind the cards */
+.glow-streak {
   position: absolute;
-  width: 170px;
-  height: 170px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  width: 5px;
+  height: 320px;
+  background: linear-gradient(180deg, transparent, #ff2fb0, transparent);
+  filter: blur(16px);
+  transform: rotate(28deg);
+  top: -60px;
+  left: 130px;
+  opacity: 0.55;
   pointer-events: none;
-}
-
-/* AVATAR */
-.avatar {
-  width: 95px;
-  height: 95px;
-  border-radius: 50%;
-  object-fit: cover;
-  position: relative;
-  z-index: 2;
+  z-index: 0;
 }
 
 /* =========================
-   STATUS DOT
+   TALL DISCORD CARD
 ========================= */
-.status-dot {
-  width: 18px;
-  height: 18px;
+.card-tall {
+  width: 130px;
+  height: 380px;
+  background: #0c0c0e;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+  z-index: 1;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5) saturate(0.9);
+}
+
+.card-avatar-wrap {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 62px;
+  height: 62px;
+}
+
+.card-avatar-wrap .avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #000;
+  background: #1a1a1a;
+  display: block;
+}
+
+.card-avatar-wrap .status-dot {
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   position: absolute;
-  bottom: 18px;
-  right: 18px;
-  border: 3px solid #000;
-  z-index: 3;
+  bottom: 0;
+  right: 0;
+  border: 3px solid #0c0c0e;
 }
 
 .online { background: #43b581; }
@@ -118,124 +196,39 @@ body {
 .dnd { background: #f04747; }
 .offline { background: #747f8d; }
 
-/* =========================
-   HOVER DISCORD CARD
-========================= */
+/* hover popup with name/status */
 .discord-card {
   position: absolute;
-  bottom: 110%;
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
   background: #111;
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
-  width: 220px;
+  width: 180px;
   opacity: 0;
-  transition: 0.3s ease;
+  transition: 0.25s ease;
   text-align: left;
   z-index: 20;
+  pointer-events: none;
 }
 
-.avatar-container:hover .discord-card {
+.card-avatar-wrap:hover .discord-card {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
 
-/* hover avatar */
-#card-avatar {
-  width: 40px;
-  height: 40px;
+.card-avatar-img {
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-/* =========================
-   NAME
-========================= */
-#display-name {
-  font-size: 22px;
-  margin-top: 10px;
-}
-
-/* =========================
-   NOTE (UNDER USERNAME AREA)
-========================= */
-#note-section {
-  margin-top: 6px;
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-/* =========================
-   SOCIALS
-========================= */
-.socials {
-  margin-top: 14px;
-}
-
-.socials a {
-  color: #fff;
-  margin: 10px;
-  font-size: 20px;
-  opacity: 0.5;
-  transition: 0.3s ease;
-  display: inline-block;
-}
-
-.socials a:hover {
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
-/* =========================
-   NOW PLAYING FRAME (NEW FIXED BOX)
-========================= */
-.now-playing-frame {
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
-}
-
-.now-playing-title {
-  font-size: 11px;
-  opacity: 0.6;
-  letter-spacing: 1px;
-}
-
-.now-playing-text {
-  font-size: 12px;
-  margin-top: 4px;
-  color: #ddd;
-}
-
-/* =========================
-   VIEWS
-========================= */
-.view-pill {
-  margin-top: 12px;
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-/* =========================
-   FOOTER
-========================= */
-.made-by {
+.made-by { 
   position: fixed;
   bottom: 10px;
   right: 15px;
   font-size: 10px;
   color: rgba(255,255,255,0.4);
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-@keyframes breathe {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
 }
