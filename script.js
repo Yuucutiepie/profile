@@ -10,7 +10,7 @@ const CONFIG = {
   // BRANDING
   brand: {
     name: "XCLSV",
-    subText: "HEADS: YUU & CREAM",
+    subText: "HEADS: YUU EYA CREAM",
     navTitle: "XCLSV",
   },
 
@@ -33,16 +33,26 @@ const CONFIG = {
       role: "MASARAP",
       badge: "Founder",
       bio: "Commanding XCLSV with Cream ✦ Clan Head",
-      banner: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg",
+      banner: "https://giphy.com/gifs/megan-katseye-dpEJBxvLQzxEaG2mZ0",
+      color: "#7eb4ff",
+    },
+    Eya: {
+      discordId: "1478284462738505910", // Yuu's Discord ID
+      name: "Eya",
+      tag: "@eyaya",
+      role: "MASARAP",
+      badge: "BEESAYA",
+      bio: "BATA LANG NAMIN",
+      banner: "https://cdn.discordapp.com/attachments/1489605577532244110/1538469508379971714/29d7b176d5dd6347db3b2aada7ad24bc.gif?ex=6a82cae2&is=6a817962&hm=cccaebdf14bde54c332b5df1c28944c508405ca3e8578dab54f679e5ab4da2c0",
       color: "#7eb4ff",
     },
   },
 
   // 2) HALL OF FAME (CLAN ELITES & LEGENDS)
   hallOfFame: [
-    { discordId: "1390873845279232110", fallbackName: "Masarap 1" },
+    { discordId: "1434524132162277409", fallbackName: "Masarap 1" },
     { discordId: "1478284462738505910", fallbackName: "Masarap 2" },
-    { discordId: "0", fallbackName: "Masarap 3" },
+    { discordId: "1396362116243390496", fallbackName: "Masarap 3" },
     { discordId: "0", fallbackName: "Elite 4" },
     { discordId: "0", fallbackName: "Elite 5" },
     { discordId: "0", fallbackName: "Elite 6" },
@@ -61,9 +71,9 @@ const CONFIG = {
   // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3 / File Garden)
   playlist: [
     {
-      title: "Addicted To You",
+      title: "Sarapan",
       artist: "Main Track",
-      src: "Addicted To You.mp3",
+      src: "file:///C:/Users/kyllj/Downloads/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
     },
     {
       title: "Molly to the Head",
@@ -71,9 +81,9 @@ const CONFIG = {
       src: "https://file.garden/aWEjqj03KS-m2Cfz/arcs/Hev%20Abi%20-%20molly%20to%20the%20head%20freestyle.mp3",
     },
     {
-      title: "Montagem Phonk",
-      artist: "Aesthetic Phonk",
-      src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=phonk-112199.mp3",
+      title: "SARAPAN",
+      artist: "Yuu SARAP",
+      src: "file:///C:/Users/kyllj/Downloads/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
     },
     {
       title: "Midnight Lo-Fi Chill",
