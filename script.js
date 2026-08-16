@@ -1,30 +1,39 @@
+/**
+ * ============================================================
+ * XCLSV CLAN ✦ ULTRA SHOWCASE JAVASCRIPT SYSTEM
+ * Clan Heads (Cream & Yuu) + Hall of Fame + Members
+ * Real-time Discord Lanyard + 3D Tilt + Audio Changer Engine
+ * ============================================================
+ */
+
 const CONFIG = {
   // BRANDING
   brand: {
-    name: "Masarap",
-    subText: "Single",
-    navTitle: "Masarap",
+    name: "XCLSV",
+    subText: "HEADS: YUU & CREAM",
+    navTitle: "XCLSV",
   },
 
+  // 1) CLAN HEADS (THE FOUNDERS & SUPREME LEADERS: CREAM & YUU)
   heads: {
-    Cream: {
-      discordId: "1393674906197033123",
+    cream: {
+      discordId: "1393674906197033123", // Cream / Cwerm's Discord ID
       name: "Cwerm",
       tag: "@Cream",
       role: "Mapakla",
-      badge: "Legit",
-      bio: "AHHH YAMETE",
+      badge: "Founder",
+      bio: "AHHH YAMETE ✦ XCLSV Head",
       banner: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDRtcTM1OWtvNXNta3Jrd3FmcnJtb2cya2t1NmNxeng3eXppcXdwNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/117XNEF51xu8Wk/giphy.gif",
-      color: "#7eb4ff",
+      color: "#ff7ebb",
     },
     yuu: {
       discordId: "1496377821076127774", // Yuu's Discord ID
       name: "Yuu",
       tag: "@yuu",
       role: "MASARAP",
-      badge: "Weh",
-      bio: "Uwu",
-      banner: "file:///C:/Users/kyllj/Downloads/From%20Klickpin.com-%20Discover%20Cozy%20digital%20product%20ideas%20for%20your%20next%20inspiration%20board%20built%20around%20ideas%20that%20are%20easy%20to%20save%20and%20revisit%20later-.gif",
+      badge: "Founder",
+      bio: "Commanding XCLSV with Cream ✦ Clan Head",
+      banner: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg",
       color: "#7eb4ff",
     },
   },
@@ -34,6 +43,9 @@ const CONFIG = {
     { discordId: "1390873845279232110", fallbackName: "Masarap 1" },
     { discordId: "1478284462738505910", fallbackName: "Masarap 2" },
     { discordId: "1487431375106740255", fallbackName: "Masarap 3" },
+    { discordId: "806491799626711060", fallbackName: "Elite 4" },
+    { discordId: "1327220072481165346", fallbackName: "Elite 5" },
+    { discordId: "1518182598189387837", fallbackName: "Elite 6" },
   ],
 
   // 3) CLAN MEMBERS (ACTIVE VANGUARD)
@@ -41,14 +53,17 @@ const CONFIG = {
     { discordId: "1482842530650525890", fallbackName: "Vanguard 1" },
     { discordId: "818729714197069845", fallbackName: "Vanguard 2" },
     { discordId: "1500803765853360278", fallbackName: "Vanguard 3" },
+    { discordId: "1311163736635211826", fallbackName: "Vanguard 4" },
+    { discordId: "1415945154438762551", fallbackName: "Vanguard 5" },
+    { discordId: "1362421736079102122", fallbackName: "Vanguard 6" },
   ],
 
-  // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3)
+  // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3 / File Garden)
   playlist: [
     {
       title: "Addicted To You",
-      artist: "Local Track",
-      src: "https://file.garden/djcassuk%20x%20Mavado%20-%20addicted%20to%20you%20(Official%20Audio).mp3",
+      artist: "Main Track",
+      src: "Addicted To You.mp3",
     },
     {
       title: "Molly to the Head",
@@ -71,16 +86,22 @@ const CONFIG = {
 (function () {
   "use strict";
 
-  // Collect all unique Discord IDs
+  // Collect all unique Discord IDs safely
   const allDiscordIds = [];
-  if (CONFIG.heads.eya.discordId) allDiscordIds.push(CONFIG.heads.eya.discordId);
-  if (CONFIG.heads.yuu.discordId) allDiscordIds.push(CONFIG.heads.yuu.discordId);
-  CONFIG.hallOfFame.forEach((m) => {
-    if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
+  Object.keys(CONFIG.heads).forEach((k) => {
+    const id = CONFIG.heads[k]?.discordId;
+    if (id && !allDiscordIds.includes(id)) allDiscordIds.push(id);
   });
-  CONFIG.members.forEach((m) => {
-    if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
-  });
+  if (Array.isArray(CONFIG.hallOfFame)) {
+    CONFIG.hallOfFame.forEach((m) => {
+      if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
+    });
+  }
+  if (Array.isArray(CONFIG.members)) {
+    CONFIG.members.forEach((m) => {
+      if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
+    });
+  }
 
   /* ============================================================
      1) DYNAMIC RENDER OF HALL OF FAME & MEMBERS GRIDS
@@ -89,7 +110,7 @@ const CONFIG = {
     const fameGrid = document.getElementById("fame-grid");
     const membersGrid = document.getElementById("members-grid");
 
-    if (fameGrid) {
+    if (fameGrid && Array.isArray(CONFIG.hallOfFame)) {
       fameGrid.innerHTML = CONFIG.hallOfFame
         .map(
           (u, idx) => `
@@ -130,7 +151,7 @@ const CONFIG = {
         .join("");
     }
 
-    if (membersGrid) {
+    if (membersGrid && Array.isArray(CONFIG.members)) {
       membersGrid.innerHTML = CONFIG.members
         .map(
           (u, idx) => `
@@ -259,7 +280,7 @@ const CONFIG = {
     function animateCanvas() {
       ctx.clearRect(0, 0, width, height);
 
-      // Subtle ambient glowing nebula centers
+      // Ambient glowing nebula
       const grad1 = ctx.createRadialGradient(width * 0.25, height * 0.35, 10, width * 0.25, height * 0.35, width * 0.45);
       grad1.addColorStop(0, "rgba(255, 126, 187, 0.03)");
       grad1.addColorStop(1, "transparent");
@@ -407,14 +428,14 @@ const CONFIG = {
   }
 
   function loadTrack(index, autoPlay = true) {
-    if (!CONFIG.playlist[index]) return;
+    if (!CONFIG.playlist || !CONFIG.playlist[index] || !audio) return;
     currentTrackIndex = index;
     const track = CONFIG.playlist[index];
 
     audio.src = track.src;
-    trackTitle.textContent = track.title;
+    if (trackTitle) trackTitle.textContent = track.title;
     if (navSongTitle) navSongTitle.textContent = track.title;
-    trackStatus.textContent = `${track.artist}`;
+    if (trackStatus) trackStatus.textContent = `${track.artist}`;
 
     // Update active state in modal list
     document.querySelectorAll(".track-item").forEach((el, idx) => {
@@ -430,18 +451,16 @@ const CONFIG = {
   }
 
   function updatePlayState(isPlaying) {
-    if (isPlaying) {
-      playIcon.className = "fa-solid fa-pause";
-      waveform.classList.remove("paused");
-      trackStatus.textContent = "Now Playing ✦";
-    } else {
-      playIcon.className = "fa-solid fa-play";
-      waveform.classList.add("paused");
-      trackStatus.textContent = "Paused";
+    if (playIcon) playIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
+    if (waveform) {
+      if (isPlaying) waveform.classList.remove("paused");
+      else waveform.classList.add("paused");
     }
+    if (trackStatus) trackStatus.textContent = isPlaying ? "Now Playing ✦" : "Paused";
   }
 
   function togglePlay() {
+    if (!audio) return;
     if (audio.paused) {
       audio.play().then(() => updatePlayState(true)).catch(() => updatePlayState(false));
     } else {
@@ -451,7 +470,7 @@ const CONFIG = {
   }
 
   function renderPlaylistModal() {
-    if (!playlistContainer) return;
+    if (!playlistContainer || !Array.isArray(CONFIG.playlist)) return;
     playlistContainer.innerHTML = "";
 
     CONFIG.playlist.forEach((track, idx) => {
@@ -484,40 +503,42 @@ const CONFIG = {
     if (playBtn) playBtn.addEventListener("click", togglePlay);
 
     // Audio timeupdate
-    audio.addEventListener("timeupdate", () => {
-      if (audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = `${percent}%`;
-        timeCurrent.textContent = formatTime(audio.currentTime);
-        timeDuration.textContent = formatTime(audio.duration);
-      }
-    });
+    if (audio) {
+      audio.addEventListener("timeupdate", () => {
+        if (audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100;
+          if (progressFill) progressFill.style.width = `${percent}%`;
+          if (timeCurrent) timeCurrent.textContent = formatTime(audio.currentTime);
+          if (timeDuration) timeDuration.textContent = formatTime(audio.duration);
+        }
+      });
+    }
 
     // Seek bar click
     if (progressBar) {
       progressBar.addEventListener("click", (e) => {
         const rect = progressBar.getBoundingClientRect();
         const pos = (e.clientX - rect.left) / rect.width;
-        if (audio.duration) {
+        if (audio && audio.duration) {
           audio.currentTime = pos * audio.duration;
         }
       });
     }
 
     // Volume Slider
-    if (volSlider) {
+    if (volSlider && audio) {
       volSlider.addEventListener("input", (e) => {
         audio.volume = parseFloat(e.target.value);
         audio.muted = false;
-        volIcon.className = audio.volume === 0 ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+        if (volIcon) volIcon.className = audio.volume === 0 ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
       });
     }
 
     // Mute Button
-    if (muteBtn) {
+    if (muteBtn && audio) {
       muteBtn.addEventListener("click", () => {
         audio.muted = !audio.muted;
-        volIcon.className = audio.muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+        if (volIcon) volIcon.className = audio.muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
       });
     }
 
@@ -624,9 +645,13 @@ const CONFIG = {
     const username = u.username || "user";
     const av = avatarUrl(u);
 
-    // 1. Update Clan Heads (Eya & Yuu)
-    ["eya", "yuu"].forEach((key) => {
-      if (CONFIG.heads[key].discordId === id) {
+    // 1. Update Clan Heads (handles any keys like cream, yuu, eya, etc.)
+    Object.keys(CONFIG.heads).forEach((headKey) => {
+      const headConfig = CONFIG.heads[headKey];
+      if (headConfig && headConfig.discordId === id) {
+        // Map to normalized IDs (e.g. cream / yuu)
+        const key = headKey.toLowerCase();
+
         const avEl = document.getElementById(`avatar-${key}`);
         if (avEl) avEl.style.backgroundImage = `url('${av}')`;
 
@@ -855,25 +880,41 @@ const CONFIG = {
      8) ACTION BUTTONS (COPY ID & MENTION)
   ============================================================ */
   function initActionButtons() {
-    ["eya", "yuu"].forEach((key) => {
+    Object.keys(CONFIG.heads).forEach((headKey) => {
+      const key = headKey.toLowerCase();
+      const headData = CONFIG.heads[headKey];
+      if (!headData) return;
+
       const copyBtn = document.getElementById(`copy-btn-${key}`);
       const mentionBtn = document.getElementById(`mention-btn-${key}`);
-      const id = CONFIG.heads[key].discordId;
-      const name = CONFIG.heads[key].name;
+      const id = headData.discordId;
+      const name = headData.name || key;
 
       if (copyBtn) {
         copyBtn.addEventListener("click", () => {
-          navigator.clipboard.writeText(id).then(() => {
-            showToast(`Copied ${name}'s Discord ID (${id})`);
-          });
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(id).then(() => {
+              showToast(`Copied ${name}'s Discord ID (${id})`);
+            }).catch(() => {
+              showToast(`ID: ${id}`);
+            });
+          } else {
+            showToast(`ID: ${id}`);
+          }
         });
       }
 
       if (mentionBtn) {
         mentionBtn.addEventListener("click", () => {
-          navigator.clipboard.writeText(`<@${id}>`).then(() => {
-            showToast(`Copied mention <@${id}>`);
-          });
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(`<@${id}>`).then(() => {
+              showToast(`Copied mention <@${id}>`);
+            }).catch(() => {
+              showToast(`Mention: <@${id}>`);
+            });
+          } else {
+            showToast(`Mention: <@${id}>`);
+          }
         });
       }
     });
@@ -893,11 +934,13 @@ const CONFIG = {
       intro.classList.add("exit");
 
       // Start audio smoothly
-      audio.volume = 0.85;
-      audio
-        .play()
-        .then(() => updatePlayState(true))
-        .catch(() => updatePlayState(false));
+      if (audio) {
+        audio.volume = 0.85;
+        audio
+          .play()
+          .then(() => updatePlayState(true))
+          .catch(() => updatePlayState(false));
+      }
 
       setTimeout(() => {
         if (intro.parentNode) intro.parentNode.removeChild(intro);
