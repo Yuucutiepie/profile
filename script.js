@@ -21,7 +21,7 @@ const CONFIG = {
   // BACKGROUND MUSIC
   audio: {
     src: "https://file.garden/aWEjqj03KS-m2Cfz/arcs/Hev%20Abi%20-%20molly%20to%20the%20head%20freestyle.mp3",
-    title: "Hev Abi — Molly to the Head",
+    title: "Music — Sarap",
   },
 
   // SHOWCASE PAGES CONFIGURATION
