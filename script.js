@@ -1,7 +1,8 @@
 /**
  * ============================================================
- * EYA & YUU ✦ ULTRA SHOWCASE JAVASCRIPT SYSTEM
- * Real-time Discord Lanyard Integration + 3D Tilt + Audio Engine
+ * XOLUMS CLAN ✦ ULTRA SHOWCASE JAVASCRIPT SYSTEM
+ * Clan Heads (Eya & Yuu) + Hall of Fame + Members
+ * Real-time Discord Lanyard + 3D Tilt + Audio Changer Engine
  * ============================================================
  */
 
@@ -9,33 +10,57 @@ const CONFIG = {
   // BRANDING
   brand: {
     name: "XOLUMS",
-    subText: "EYA & YUU",
-    navTitle: "EYA & YUU",
+    subText: "HEADS: EYA & YUU",
+    navTitle: "XOLUMS CLAN",
   },
 
-  // DUO PROFILES CONFIGURATION
-  profiles: {
+  // 1) CLAN HEADS (THE FOUNDERS & SUPREME LEADERS: EYA & YUU)
+  heads: {
     eya: {
-      discordId: "1485470671126659233", // Eya's Discord User ID
+      discordId: "1485470671126659233", // Eya's Discord ID
       name: "Eya",
       tag: "@eya",
-      role: "Princess",
-      bio: "My heart belongs to you forever ✦",
+      role: "Clan Head",
+      badge: "Founder",
+      bio: "Reigning supreme with Yuu ✦ Clan Head",
       banner: "https://i.pinimg.com/736x/c3/7d/01/c37d01791fb5750df074198736daa5bb.jpg",
       color: "#ff7ebb",
     },
     yuu: {
-      discordId: "1496377821076127774", // Yuu's Discord User ID (or replace with your ID)
+      discordId: "1496377821076127774", // Yuu's Discord ID
       name: "Yuu",
       tag: "@yuu",
-      role: "King",
-      bio: "Always protecting my queen ✦",
+      role: "Clan Head",
+      badge: "Founder",
+      bio: "Commanding the Syndicate with Eya ✦ Clan Head",
       banner: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg",
       color: "#7eb4ff",
     },
   },
 
-  // PLAYLIST CONFIGURATION (Addicted To You is default!)
+  // 2) HALL OF FAME (CLAN ELITES & LEGENDS)
+  hallOfFame: [
+    { discordId: "806491799626711060", fallbackName: "Syndicate Elite 1" },
+    { discordId: "1478284462738505910", fallbackName: "Syndicate Elite 2" },
+    { discordId: "1482842530650525890", fallbackName: "Syndicate Elite 3" },
+    { discordId: "1518182598189387837", fallbackName: "Syndicate Elite 4" },
+    { discordId: "1327220072481165346", fallbackName: "Syndicate Elite 5" },
+    { discordId: "1161629566478073977", fallbackName: "Syndicate Elite 6" },
+  ],
+
+  // 3) CLAN MEMBERS (ACTIVE VANGUARD)
+  members: [
+    { discordId: "1498547153897914382", fallbackName: "Vanguard 1" },
+    { discordId: "818729714197069845", fallbackName: "Vanguard 2" },
+    { discordId: "1500803765853360278", fallbackName: "Vanguard 3" },
+    { discordId: "1311163736635211826", fallbackName: "Vanguard 4" },
+    { discordId: "1415945154438762551", fallbackName: "Vanguard 5" },
+    { discordId: "1362421736079102122", fallbackName: "Vanguard 6" },
+    { discordId: "958013565158170706", fallbackName: "Vanguard 7" },
+    { discordId: "1038834445991550986", fallbackName: "Vanguard 8" },
+  ],
+
+  // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3)
   playlist: [
     {
       title: "Addicted To You",
@@ -63,8 +88,109 @@ const CONFIG = {
 (function () {
   "use strict";
 
+  // Collect all unique Discord IDs
+  const allDiscordIds = [];
+  if (CONFIG.heads.eya.discordId) allDiscordIds.push(CONFIG.heads.eya.discordId);
+  if (CONFIG.heads.yuu.discordId) allDiscordIds.push(CONFIG.heads.yuu.discordId);
+  CONFIG.hallOfFame.forEach((m) => {
+    if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
+  });
+  CONFIG.members.forEach((m) => {
+    if (m.discordId && !allDiscordIds.includes(m.discordId)) allDiscordIds.push(m.discordId);
+  });
+
   /* ============================================================
-     1) CUSTOM CURSOR SYSTEM
+     1) DYNAMIC RENDER OF HALL OF FAME & MEMBERS GRIDS
+  ============================================================ */
+  function renderClanGrids() {
+    const fameGrid = document.getElementById("fame-grid");
+    const membersGrid = document.getElementById("members-grid");
+
+    if (fameGrid) {
+      fameGrid.innerHTML = CONFIG.hallOfFame
+        .map(
+          (u, idx) => `
+        <div class="clan-slot" data-discord="${u.discordId}" id="fame-slot-${idx}">
+          <div class="clan-avatar-ring">
+            <div class="clan-avatar-inner" id="eavatar-fame-${idx}">
+              <img class="clan-deco" id="edeco-fame-${idx}" src="" alt="deco" />
+              <div class="clan-status-badge" id="ebadge-fame-${idx}"></div>
+            </div>
+          </div>
+          <div class="clan-label" id="elabel-fame-${idx}">${u.fallbackName || "loading..."}</div>
+
+          <!-- Discord Hover Popup -->
+          <div class="clan-popup" id="epopup-fame-${idx}">
+            <div class="clan-popup-banner" id="epbanner-fame-${idx}"></div>
+            <div class="clan-popup-body">
+              <div class="clan-popup-avatar-wrap">
+                <div class="clan-popup-avatar" id="epavatar-fame-${idx}">
+                  <img class="clan-popup-deco" id="epdeco-fame-${idx}" src="" alt="deco" />
+                  <div class="clan-popup-status-dot" id="epsdot-fame-${idx}"></div>
+                </div>
+              </div>
+              <div class="clan-popup-name" id="epname-fame-${idx}">${u.fallbackName || "User"}</div>
+              <div class="clan-popup-tag" id="eptag-fame-${idx}">@discord</div>
+              <div class="clan-popup-status-row">
+                <span class="clan-popup-dot" id="epdot-fame-${idx}"></span>
+                <span id="epstatus-fame-${idx}">Offline</span>
+              </div>
+              <div class="clan-popup-activity" id="epact-fame-${idx}">
+                <div class="clan-popup-activity-title">Activity</div>
+                <div class="clan-popup-activity-name" id="epactname-fame-${idx}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    if (membersGrid) {
+      membersGrid.innerHTML = CONFIG.members
+        .map(
+          (u, idx) => `
+        <div class="clan-slot" data-discord="${u.discordId}" id="member-slot-${idx}">
+          <div class="clan-avatar-ring">
+            <div class="clan-avatar-inner" id="eavatar-member-${idx}">
+              <img class="clan-deco" id="edeco-member-${idx}" src="" alt="deco" />
+              <div class="clan-status-badge" id="ebadge-member-${idx}"></div>
+            </div>
+          </div>
+          <div class="clan-label" id="elabel-member-${idx}">${u.fallbackName || "loading..."}</div>
+
+          <!-- Discord Hover Popup -->
+          <div class="clan-popup" id="epopup-member-${idx}">
+            <div class="clan-popup-banner" id="epbanner-member-${idx}"></div>
+            <div class="clan-popup-body">
+              <div class="clan-popup-avatar-wrap">
+                <div class="clan-popup-avatar" id="epavatar-member-${idx}">
+                  <img class="clan-popup-deco" id="epdeco-member-${idx}" src="" alt="deco" />
+                  <div class="clan-popup-status-dot" id="epsdot-member-${idx}"></div>
+                </div>
+              </div>
+              <div class="clan-popup-name" id="epname-member-${idx}">${u.fallbackName || "User"}</div>
+              <div class="clan-popup-tag" id="eptag-member-${idx}">@discord</div>
+              <div class="clan-popup-status-row">
+                <span class="clan-popup-dot" id="epdot-member-${idx}"></span>
+                <span id="epstatus-member-${idx}">Offline</span>
+              </div>
+              <div class="clan-popup-activity" id="epact-member-${idx}">
+                <div class="clan-popup-activity-title">Activity</div>
+                <div class="clan-popup-activity-name" id="epactname-member-${idx}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    }
+  }
+
+  /* ============================================================
+     2) CUSTOM CURSOR SYSTEM
   ============================================================ */
   function initCustomCursor() {
     const cursor = document.getElementById("cursor");
@@ -91,14 +217,14 @@ const CONFIG = {
     renderTrail();
 
     // Hover expand on clickable elements
-    document.querySelectorAll("button, a, input, .duo-card, .track-item, label").forEach((el) => {
+    document.querySelectorAll("button, a, input, .head-card, .clan-slot, .track-item, label").forEach((el) => {
       el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
       el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
     });
   }
 
   /* ============================================================
-     2) INTERACTIVE BACKGROUND PARTICLES & STARS CANVAS
+     3) INTERACTIVE BACKGROUND PARTICLES & STARS CANVAS
   ============================================================ */
   function initCanvasBackground() {
     const canvas = document.getElementById("bg-canvas");
@@ -140,7 +266,7 @@ const CONFIG = {
           y: Math.random() * (height / 2),
           len: Math.random() * 120 + 80,
           speed: Math.random() * 12 + 10,
-          angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.2,
+          angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2,
           opacity: 1,
         });
       }
@@ -214,13 +340,13 @@ const CONFIG = {
   }
 
   /* ============================================================
-     3) 3D CARD PARALLAX TILT PHYSICS
+     4) 3D CARD PARALLAX TILT PHYSICS (CLAN HEADS)
   ============================================================ */
   function init3DCardTilt() {
-    const cards = document.querySelectorAll(".duo-card");
+    const cards = document.querySelectorAll(".head-card");
 
     cards.forEach((card) => {
-      const parent = card.closest(".duo-card-wrap");
+      const parent = card.closest(".head-card-wrap");
       if (!parent) return;
 
       function onMouseMove(e) {
@@ -253,7 +379,7 @@ const CONFIG = {
   }
 
   /* ============================================================
-     4) TOAST NOTIFICATION SYSTEM
+     5) TOAST NOTIFICATION SYSTEM
   ============================================================ */
   function showToast(message) {
     const container = document.getElementById("toast-container");
@@ -270,7 +396,7 @@ const CONFIG = {
   }
 
   /* ============================================================
-     5) AUDIO PLAYER & PLAYLIST CHANGER ENGINE
+     6) AUDIO PLAYER & PLAYLIST CHANGER ENGINE
   ============================================================ */
   let currentTrackIndex = 0;
   const audio = document.getElementById("bgMusic");
@@ -369,7 +495,6 @@ const CONFIG = {
   }
 
   function initAudioControls() {
-    // Initial load without autoplay until user interaction/enter
     loadTrack(0, false);
     renderPlaylistModal();
 
@@ -442,8 +567,8 @@ const CONFIG = {
         const url = customUrlInput.value.trim();
         if (url) {
           CONFIG.playlist.push({
-            title: "Custom Web Stream",
-            artist: "User URL",
+            title: "Custom Stream",
+            artist: "User Link",
             src: url,
           });
           renderPlaylistModal();
@@ -480,7 +605,7 @@ const CONFIG = {
   }
 
   /* ============================================================
-     6) REAL-TIME DISCORD LANYARD INTEGRATION
+     7) REAL-TIME DISCORD LANYARD INTEGRATION
   ============================================================ */
   const statusColors = {
     online: "#43b581",
@@ -507,111 +632,195 @@ const CONFIG = {
     return `https://cdn.discordapp.com/avatar-decoration-presets/${asset}.png?size=160&passthrough=true`;
   }
 
-  function updateProfileCard(key, data) {
+  function applyDiscordDataToAll(id, data) {
     if (!data || !data.discord_user) return;
     const u = data.discord_user;
     const status = data.discord_status || "offline";
-    const displayName = u.global_name || u.display_name || u.username || CONFIG.profiles[key].name;
-    const username = u.username || CONFIG.profiles[key].tag.replace("@", "");
+    const color = statusColors[status] || "#747f8d";
+    const displayName = u.global_name || u.display_name || u.username || "User";
+    const username = u.username || "user";
     const av = avatarUrl(u);
 
-    // Avatar
-    const avEl = document.getElementById(`avatar-${key}`);
-    if (avEl) avEl.style.backgroundImage = `url('${av}')`;
+    // 1. Update Clan Heads (Eya & Yuu)
+    ["eya", "yuu"].forEach((key) => {
+      if (CONFIG.heads[key].discordId === id) {
+        const avEl = document.getElementById(`avatar-${key}`);
+        if (avEl) avEl.style.backgroundImage = `url('${av}')`;
 
-    // Names
-    const nameEl = document.getElementById(`name-${key}`);
-    if (nameEl) nameEl.textContent = displayName;
+        const nameEl = document.getElementById(`name-${key}`);
+        if (nameEl) nameEl.textContent = displayName;
 
-    const tagEl = document.getElementById(`tag-${key}`);
-    if (tagEl) tagEl.textContent = `@${username}`;
+        const tagEl = document.getElementById(`tag-${key}`);
+        if (tagEl) tagEl.textContent = `@${username}`;
 
-    // Decoration
-    if (u.avatar_decoration_data?.asset) {
-      const deco = document.getElementById(`deco-${key}`);
-      if (deco) {
-        deco.src = decoUrl(u.avatar_decoration_data.asset);
-        deco.onload = () => deco.classList.add("loaded");
+        if (u.avatar_decoration_data?.asset) {
+          const deco = document.getElementById(`deco-${key}`);
+          if (deco) {
+            deco.src = decoUrl(u.avatar_decoration_data.asset);
+            deco.onload = () => deco.classList.add("loaded");
+          }
+        }
+
+        const orb = document.getElementById(`status-orb-${key}`);
+        if (orb) orb.className = `status-orb ${status}`;
+
+        const miniDot = document.getElementById(`status-mini-${key}`);
+        if (miniDot) miniDot.className = `status-dot-mini ${status}`;
+
+        const statusLabel = document.getElementById(`status-label-${key}`);
+        if (statusLabel) {
+          const textMap = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
+          statusLabel.textContent = textMap[status] || "Offline";
+        }
+
+        // Custom status / bio
+        if (data.activities && data.activities.length > 0) {
+          const customStatus = data.activities.find((a) => a.type === 4);
+          if (customStatus && customStatus.state) {
+            const bioText = document.getElementById(`bio-text-${key}`);
+            if (bioText) bioText.textContent = `${customStatus.emoji ? customStatus.emoji.name + " " : ""}${customStatus.state}`;
+          }
+        }
+
+        // Spotify
+        const spWidget = document.getElementById(`spotify-${key}`);
+        if (spWidget) {
+          if (data.spotify && data.spotify.track_id) {
+            spWidget.classList.add("active");
+            const art = document.getElementById(`sp-art-${key}`);
+            const song = document.getElementById(`sp-song-${key}`);
+            const artist = document.getElementById(`sp-artist-${key}`);
+            if (art) art.src = data.spotify.album_art_url || "";
+            if (song) song.textContent = data.spotify.song || "";
+            if (artist) artist.textContent = data.spotify.artist || "";
+          } else {
+            spWidget.classList.remove("active");
+          }
+        }
+
+        // Activity / Game
+        const actWidget = document.getElementById(`activity-${key}`);
+        if (actWidget) {
+          const nonSpotify = data.activities?.find((a) => a.type !== 2 && a.type !== 4);
+          if (nonSpotify && nonSpotify.name) {
+            actWidget.classList.add("active");
+            const actTitle = document.getElementById(`act-title-${key}`);
+            const actName = document.getElementById(`act-name-${key}`);
+            if (actTitle) actTitle.textContent = nonSpotify.type === 0 ? "PLAYING A GAME" : "ACTIVE NOW";
+            if (actName) actName.textContent = nonSpotify.name + (nonSpotify.details ? ` — ${nonSpotify.details}` : "");
+          } else {
+            actWidget.classList.remove("active");
+          }
+        }
       }
-    }
+    });
 
-    // Status Orb & Label
-    const orb = document.getElementById(`status-orb-${key}`);
-    if (orb) orb.className = `status-orb ${status}`;
+    // 2. Update Hall of Fame and Members Grid Slots
+    document.querySelectorAll(`.clan-slot[data-discord="${id}"]`).forEach((slot) => {
+      const slotId = slot.id.replace("fame-slot-", "fame-").replace("member-slot-", "member-");
 
-    const miniDot = document.getElementById(`status-mini-${key}`);
-    if (miniDot) miniDot.className = `status-dot-mini ${status}`;
+      // Circular Ring
+      const innerAv = document.getElementById(`eavatar-${slotId}`);
+      if (innerAv) innerAv.style.backgroundImage = `url('${av}')`;
 
-    const statusLabel = document.getElementById(`status-label-${key}`);
-    if (statusLabel) {
-      const textMap = {
-        online: "Online",
-        idle: "Idle",
-        dnd: "Do Not Disturb",
-        offline: "Offline",
-      };
-      statusLabel.textContent = textMap[status] || "Offline";
-    }
-
-    // Custom Status / Bio
-    if (data.activities && data.activities.length > 0) {
-      const customStatus = data.activities.find((a) => a.type === 4);
-      if (customStatus && customStatus.state) {
-        const bioText = document.getElementById(`bio-text-${key}`);
-        if (bioText) bioText.textContent = `${customStatus.emoji ? customStatus.emoji.name + " " : ""}${customStatus.state}`;
+      const badge = document.getElementById(`ebadge-${slotId}`);
+      if (badge) {
+        badge.style.background = color;
+        badge.style.boxShadow = status !== "offline" ? `0 0 8px ${color}` : "none";
       }
-    }
 
-    // Spotify Presence
-    const spWidget = document.getElementById(`spotify-${key}`);
-    if (spWidget) {
-      if (data.spotify && data.spotify.track_id) {
-        spWidget.classList.add("active");
-        const art = document.getElementById(`sp-art-${key}`);
-        const song = document.getElementById(`sp-song-${key}`);
-        const artist = document.getElementById(`sp-artist-${key}`);
-        if (art) art.src = data.spotify.album_art_url || "";
-        if (song) song.textContent = data.spotify.song || "";
-        if (artist) artist.textContent = data.spotify.artist || "";
-      } else {
-        spWidget.classList.remove("active");
-      }
-    }
+      const label = document.getElementById(`elabel-${slotId}`);
+      if (label) label.textContent = displayName;
 
-    // Activity / Game Presence
-    const actWidget = document.getElementById(`activity-${key}`);
-    if (actWidget) {
-      const nonSpotify = data.activities?.find((a) => a.type !== 2 && a.type !== 4);
-      if (nonSpotify && nonSpotify.name) {
-        actWidget.classList.add("active");
-        const actTitle = document.getElementById(`act-title-${key}`);
-        const actName = document.getElementById(`act-name-${key}`);
-        if (actTitle) actTitle.textContent = nonSpotify.type === 0 ? "PLAYING A GAME" : "ACTIVE NOW";
-        if (actName) actName.textContent = nonSpotify.name + (nonSpotify.details ? ` — ${nonSpotify.details}` : "");
-      } else {
-        actWidget.classList.remove("active");
+      // Decoration
+      if (u.avatar_decoration_data?.asset) {
+        const dUrl = decoUrl(u.avatar_decoration_data.asset);
+        const edeco = document.getElementById(`edeco-${slotId}`);
+        if (edeco) {
+          edeco.src = dUrl;
+          edeco.onload = () => edeco.classList.add("loaded");
+        }
+        const epdeco = document.getElementById(`epdeco-${slotId}`);
+        if (epdeco) {
+          epdeco.src = dUrl;
+          epdeco.onload = () => epdeco.classList.add("loaded");
+        }
       }
-    }
+
+      // Popup content
+      const pbanner = document.getElementById(`epbanner-${slotId}`);
+      if (pbanner) {
+        if (u.banner) {
+          const bext = u.banner.startsWith("a_") ? "gif" : "png";
+          pbanner.style.backgroundImage = `url('https://cdn.discordapp.com/banners/${u.id}/${u.banner}.${bext}?size=512')`;
+        } else if (u.accent_color) {
+          const hex = "#" + u.accent_color.toString(16).padStart(6, "0");
+          pbanner.style.background = `linear-gradient(135deg, ${hex}, ${hex}55)`;
+        } else {
+          pbanner.style.background = "linear-gradient(135deg, #444, #111)";
+        }
+      }
+
+      const pavatar = document.getElementById(`epavatar-${slotId}`);
+      if (pavatar) pavatar.style.backgroundImage = `url('${av}')`;
+
+      const psdot = document.getElementById(`epsdot-${slotId}`);
+      if (psdot) {
+        psdot.style.background = color;
+        psdot.style.boxShadow = status !== "offline" ? `0 0 6px ${color}` : "none";
+      }
+
+      const pdot = document.getElementById(`epdot-${slotId}`);
+      if (pdot) pdot.style.background = color;
+
+      const pname = document.getElementById(`epname-${slotId}`);
+      if (pname) pname.textContent = displayName;
+
+      const ptag = document.getElementById(`eptag-${slotId}`);
+      if (ptag) ptag.textContent = `@${username}`;
+
+      const pstatus = document.getElementById(`epstatus-${slotId}`);
+      if (pstatus) {
+        const textMap = { online: "Online", idle: "Idle", dnd: "Do Not Disturb", offline: "Offline" };
+        pstatus.textContent = textMap[status] || "Offline";
+      }
+
+      // Activity / Spotify in popup
+      const pact = document.getElementById(`epact-${slotId}`);
+      const pactname = document.getElementById(`epactname-${slotId}`);
+      if (pact && pactname) {
+        if (data.activities && data.activities.length > 0) {
+          const act = data.activities.find((a) => a.type !== 2 && a.type !== 4) || data.activities[0];
+          if (act && act.name) {
+            pact.classList.add("active");
+            pactname.textContent = act.name + (act.state ? ` — ${act.state}` : "");
+          }
+        } else if (data.spotify && data.spotify.track_id) {
+          pact.classList.add("active");
+          pact.querySelector(".clan-popup-activity-title").textContent = "Listening to Spotify";
+          pactname.textContent = `${data.spotify.song} — ${data.spotify.artist}`;
+        } else {
+          pact.classList.remove("active");
+        }
+      }
+    });
   }
 
   async function fetchLanyardREST() {
-    for (const key of ["eya", "yuu"]) {
-      const id = CONFIG.profiles[key]?.discordId;
-      if (!id) continue;
+    for (const id of allDiscordIds) {
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${id}`);
         if (!res.ok) continue;
         const json = await res.json();
         if (json.success && json.data) {
-          updateProfileCard(key, json.data);
+          applyDiscordDataToAll(id, json.data);
         }
       } catch (e) {}
     }
   }
 
   function connectLanyardWS() {
-    const ids = [CONFIG.profiles.eya.discordId, CONFIG.profiles.yuu.discordId].filter(Boolean);
-    if (!ids.length) return;
+    if (!allDiscordIds.length) return;
 
     let ws;
     let heartbeatTimer;
@@ -620,7 +829,7 @@ const CONFIG = {
       ws = new WebSocket("wss://api.lanyard.rest/socket");
 
       ws.onopen = () => {
-        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_ids: ids } }));
+        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_ids: allDiscordIds } }));
       };
 
       ws.onmessage = (event) => {
@@ -637,15 +846,13 @@ const CONFIG = {
 
           if (t === "INIT_STATE") {
             Object.keys(d).forEach((userId) => {
-              if (userId === CONFIG.profiles.eya.discordId) updateProfileCard("eya", d[userId]);
-              if (userId === CONFIG.profiles.yuu.discordId) updateProfileCard("yuu", d[userId]);
+              applyDiscordDataToAll(userId, d[userId]);
             });
           }
 
           if (t === "PRESENCE_UPDATE") {
             const uid = d?.discord_user?.id;
-            if (uid === CONFIG.profiles.eya.discordId) updateProfileCard("eya", d);
-            if (uid === CONFIG.profiles.yuu.discordId) updateProfileCard("yuu", d);
+            if (uid) applyDiscordDataToAll(uid, d);
           }
         } catch (err) {}
       };
@@ -662,14 +869,14 @@ const CONFIG = {
   }
 
   /* ============================================================
-     7) BUTTON ACTIONS (COPY ID & MENTION)
+     8) ACTION BUTTONS (COPY ID & MENTION)
   ============================================================ */
   function initActionButtons() {
     ["eya", "yuu"].forEach((key) => {
       const copyBtn = document.getElementById(`copy-btn-${key}`);
       const mentionBtn = document.getElementById(`mention-btn-${key}`);
-      const id = CONFIG.profiles[key].discordId;
-      const name = CONFIG.profiles[key].name;
+      const id = CONFIG.heads[key].discordId;
+      const name = CONFIG.heads[key].name;
 
       if (copyBtn) {
         copyBtn.addEventListener("click", () => {
@@ -690,7 +897,7 @@ const CONFIG = {
   }
 
   /* ============================================================
-     8) SPLASH ENTER INTERACTION
+     9) SPLASH ENTER INTERACTION
   ============================================================ */
   function initSplashEnter() {
     const intro = document.getElementById("intro");
@@ -726,7 +933,7 @@ const CONFIG = {
   }
 
   /* ============================================================
-     9) SMOOTH NAVIGATION JUMP SCROLL
+     10) SMOOTH NAVIGATION JUMP SCROLL & OBSERVER
   ============================================================ */
   function initNavLinks() {
     document.querySelectorAll(".nav-link").forEach((link) => {
@@ -735,11 +942,51 @@ const CONFIG = {
         const targetId = link.getAttribute("data-scroll");
         const target = document.getElementById(targetId);
         if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "center" });
-          document.querySelectorAll(".nav-link").forEach((l) => l.classList.remove("active"));
-          link.classList.add("active");
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
+    });
+
+    // Update active nav link on scroll
+    window.addEventListener("scroll", () => {
+      const scrollPos = window.scrollY + 140;
+      document.querySelectorAll(".page-section").forEach((section) => {
+        const id = section.getAttribute("id");
+        if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+          document.querySelectorAll(".nav-link").forEach((l) => {
+            l.classList.toggle("active", l.getAttribute("data-scroll") === id);
+          });
+        }
+      });
+    });
+  }
+
+  /* ============================================================
+     11) MOBILE TOUCH POPUPS
+  ============================================================ */
+  function initMobileTouch() {
+    let expandedSlot = null;
+    document.querySelectorAll(".clan-slot").forEach((slot) => {
+      slot.addEventListener("touchend", (e) => {
+        if (slot._touchMoved) return;
+        e.stopPropagation();
+
+        if (expandedSlot && expandedSlot !== slot) {
+          expandedSlot.classList.remove("mobile-expanded");
+        }
+        slot.classList.toggle("mobile-expanded");
+        expandedSlot = slot.classList.contains("mobile-expanded") ? slot : null;
+      });
+
+      slot.addEventListener("touchstart", () => { slot._touchMoved = false; }, { passive: true });
+      slot.addEventListener("touchmove", () => { slot._touchMoved = true; }, { passive: true });
+    });
+
+    document.addEventListener("touchend", (e) => {
+      if (expandedSlot && !e.target.closest(".clan-slot")) {
+        expandedSlot.classList.remove("mobile-expanded");
+        expandedSlot = null;
+      }
     });
   }
 
@@ -747,6 +994,7 @@ const CONFIG = {
      BOOTSTRAP
   ============================================================ */
   document.addEventListener("DOMContentLoaded", () => {
+    renderClanGrids();
     initCustomCursor();
     initCanvasBackground();
     init3DCardTilt();
@@ -754,6 +1002,7 @@ const CONFIG = {
     initActionButtons();
     initSplashEnter();
     initNavLinks();
+    initMobileTouch();
     fetchLanyardREST();
     connectLanyardWS();
   });
