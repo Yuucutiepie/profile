@@ -66,7 +66,7 @@ const CONFIG = {
     {
       title: "Molly to the Head",
       artist: "Hev Abi",
-      src: "https://file.garden/aWEjqj03KS-m2Cfz/arcs/Hev%20Abi%20-%20molly%20to%20the%20head%20freestyle.mp3",
+      src: "https://file.garden/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
     },
     {
       title: "Addicted To You",
