@@ -1,63 +1,46 @@
-/**
- * ============================================================
- * XOLUMS CLAN ✦ ULTRA SHOWCASE JAVASCRIPT SYSTEM
- * Clan Heads (Eya & Yuu) + Hall of Fame + Members
- * Real-time Discord Lanyard + 3D Tilt + Audio Changer Engine
- * ============================================================
- */
-
 const CONFIG = {
   // BRANDING
   brand: {
-    name: "XOLUMS",
-    subText: "HEADS: EYA & YUU",
-    navTitle: "XOLUMS CLAN",
+    name: "Masarap",
+    subText: "Single",
+    navTitle: "Masarap",
   },
 
-  // 1) CLAN HEADS (THE FOUNDERS & SUPREME LEADERS: EYA & YUU)
   heads: {
-    eya: {
-      discordId: "1485470671126659233", // Eya's Discord ID
-      name: "Eya",
-      tag: "@eya",
-      role: "Clan Head",
-      badge: "Founder",
-      bio: "Reigning supreme with Yuu ✦ Clan Head",
-      banner: "https://i.pinimg.com/736x/c3/7d/01/c37d01791fb5750df074198736daa5bb.jpg",
-      color: "#ff7ebb",
+    Cream: {
+      discordId: "1393674906197033123",
+      name: "Cwerm",
+      tag: "@Cream",
+      role: "Mapakla",
+      badge: "Legit",
+      bio: "AHHH YAMETE",
+      banner: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDRtcTM1OWtvNXNta3Jrd3FmcnJtb2cya2t1NmNxeng3eXppcXdwNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/117XNEF51xu8Wk/giphy.gif",
+      color: "#7eb4ff",
     },
     yuu: {
       discordId: "1496377821076127774", // Yuu's Discord ID
       name: "Yuu",
       tag: "@yuu",
-      role: "Clan Head",
-      badge: "Founder",
-      bio: "Commanding the Syndicate with Eya ✦ Clan Head",
-      banner: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg",
+      role: "MASARAP",
+      badge: "Weh",
+      bio: "Uwu",
+      banner: "file:///C:/Users/kyllj/Downloads/From%20Klickpin.com-%20Discover%20Cozy%20digital%20product%20ideas%20for%20your%20next%20inspiration%20board%20built%20around%20ideas%20that%20are%20easy%20to%20save%20and%20revisit%20later-.gif",
       color: "#7eb4ff",
     },
   },
 
   // 2) HALL OF FAME (CLAN ELITES & LEGENDS)
   hallOfFame: [
-    { discordId: "806491799626711060", fallbackName: "Syndicate Elite 1" },
-    { discordId: "1478284462738505910", fallbackName: "Syndicate Elite 2" },
-    { discordId: "1482842530650525890", fallbackName: "Syndicate Elite 3" },
-    { discordId: "1518182598189387837", fallbackName: "Syndicate Elite 4" },
-    { discordId: "1327220072481165346", fallbackName: "Syndicate Elite 5" },
-    { discordId: "1161629566478073977", fallbackName: "Syndicate Elite 6" },
+    { discordId: "1390873845279232110", fallbackName: "Masarap 1" },
+    { discordId: "1478284462738505910", fallbackName: "Masarap 2" },
+    { discordId: "1487431375106740255", fallbackName: "Masarap 3" },
   ],
 
   // 3) CLAN MEMBERS (ACTIVE VANGUARD)
   members: [
-    { discordId: "1498547153897914382", fallbackName: "Vanguard 1" },
+    { discordId: "1482842530650525890", fallbackName: "Vanguard 1" },
     { discordId: "818729714197069845", fallbackName: "Vanguard 2" },
     { discordId: "1500803765853360278", fallbackName: "Vanguard 3" },
-    { discordId: "1311163736635211826", fallbackName: "Vanguard 4" },
-    { discordId: "1415945154438762551", fallbackName: "Vanguard 5" },
-    { discordId: "1362421736079102122", fallbackName: "Vanguard 6" },
-    { discordId: "958013565158170706", fallbackName: "Vanguard 7" },
-    { discordId: "1038834445991550986", fallbackName: "Vanguard 8" },
   ],
 
   // 4) PLAYLIST CONFIGURATION (Default is Addicted To You.mp3)
@@ -65,7 +48,7 @@ const CONFIG = {
     {
       title: "Addicted To You",
       artist: "Local Track",
-      src: "Addicted To You.mp3",
+      src: "https://file.garden/djcassuk%20x%20Mavado%20-%20addicted%20to%20you%20(Official%20Audio).mp3",
     },
     {
       title: "Molly to the Head",
