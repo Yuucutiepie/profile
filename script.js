@@ -64,7 +64,7 @@ const CONFIG = {
   // person's computer and can never load on a live site for visitors)
   playlist: [
     {
-      title: "Molly to the Head",
+      title: "ADIK AKO ",
       artist: "Hev Abi",
       src: "https://file.garden/ef8d5ab46c3c10f6bae1e0f381d0510c.mp3",
     },
