@@ -429,7 +429,8 @@ body:hover .custom-cursor { opacity: 1; }
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 255, 255, 0.08);
 }
 
-#wrap-eya .head-card:hover {
+#wrap-eya .head-card:hover,
+#wrap-cream .head-card:hover {
     border-color: rgba(255, 126, 187, 0.35);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px var(--eya-glow);
 }
@@ -487,7 +488,9 @@ body:hover .custom-cursor { opacity: 1; }
     gap: 6px;
 }
 
-.eya-rank {
+.eya-rank,
+.cream-rank,
+.Cream-rank {
     border-color: rgba(255, 126, 187, 0.4);
     color: var(--eya-accent);
 }
@@ -517,7 +520,9 @@ body:hover .custom-cursor { opacity: 1; }
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
 }
 
-.eya-ring {
+.eya-ring,
+.cream-ring,
+.Cream-ring {
     background: linear-gradient(135deg, #ffffff, var(--eya-accent));
 }
 
@@ -617,7 +622,9 @@ body:hover .custom-cursor { opacity: 1; }
     color: rgba(255, 255, 255, 0.8);
 }
 
-.eya-badge {
+.eya-badge,
+.cream-badge,
+.Cream-badge {
     background: rgba(255, 126, 187, 0.12);
     border-color: rgba(255, 126, 187, 0.3);
     color: var(--eya-accent);
