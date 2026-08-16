@@ -31,7 +31,7 @@ const CONFIG = {
       tag: "@yuu",
       role: "MASARAP",
       badge: "Founder",
-      bio: "Commanding XCLSV with Cream ✦ Clan Head",
+      bio: "AHHH YAMETE ✦ XCLSV Head",
       color: "#7eb4ff",
     },
     Eya: {
