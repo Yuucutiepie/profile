@@ -1,26 +1,22 @@
 /* ============================================================
-   1) PALITAN MO ITO NG PANGALAN NG SARILI MONG SITE/BRAND
+   1) BRANDING CONFIGURATION
 ============================================================ */
-const SITE_NAME = "XOLUMS"; // lalabas sa splash screen at sa loob ng bawat page
+const SITE_NAME = "SARAP"; // Updated branding
 
 /* ============================================================
-   2) IDINIDIKTA MO DITO ANG BAWAT PAGE (TAB), ANG DISCORD IDs,
-   AT (OPTIONAL) YUNG BACKGROUND IMAGE NG BAWAT CARD.
-   - "id": Discord User ID (Copy User ID sa Discord, Developer Mode ON)
-   - "image": link/path ng larawan para sa taas ng card (pwedeng
-     iwanan na "" kung wala, dark lang ang ipapakita)
+   2) PAGES & DISCORD USERS CONFIGURATION
 ============================================================ */
 const PAGES = [
   {
     name: "Sarap",
     ids: [
-      { id: "1485470671126659233", image: "file:///C:/Users/kyllj/Downloads/cbdc63fe-6922-454b-8fec-44f310f4582e.jpg" },
+      { id: "1485470671126659233", image: "https://i.pinimg.com/736x/c3/7d/01/c37d01791fb5750df074198736daa5bb.jpg" },
     ]
   },
   {
     name: "HALL OF FAME",
     ids: [
-      { id: "1478284462738505910", image: "https://ph.pinterest.com/pin/1146658755151849727/" },
+      { id: "1478284462738505910", image: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg" },
       { id: "1482842530650525890", image: "https://i.pinimg.com/736x/36/74/4a/36744aed24a1e4825445d5321e251e4c.jpg" },
     ]
   },
@@ -81,7 +77,7 @@ function switchPage(index){
   });
 }
 
-/* ============ CREATE ONE CARD'S HTML ============ */
+/* ============ CREATE CARD HTML ============ */
 function createCard(uid, image){
   const card = document.createElement("div");
   card.className = "card-tall";
@@ -91,21 +87,21 @@ function createCard(uid, image){
   card.innerHTML = `
     <div class="card-image" style="${imageStyle}"></div>
     <div class="card-avatar-wrap">
-      <img id="avatar-${uid}" class="avatar" src="" alt="avatar" />
+      <img id="avatar-${uid}" class="avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="avatar" />
       <div id="status-${uid}" class="status-dot offline"></div>
 
       <div class="discord-card">
-        <img id="cardavatar-${uid}" class="card-avatar-img" src="" alt="avatar" />
-        <div id="cardname-${uid}" style="font-weight:bold; font-size:12px;"></div>
-        <div id="cardusername-${uid}" style="font-size:11px; opacity:0.6;"></div>
-        <div id="cardstatus-${uid}" style="font-size:11px; margin-top:4px;"></div>
+        <img id="cardavatar-${uid}" class="card-avatar-img" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="avatar" />
+        <div id="cardname-${uid}" style="font-weight:bold; font-size:12px;">Loading...</div>
+        <div id="cardusername-${uid}" style="font-size:11px; opacity:0.6;">@user</div>
+        <div id="cardstatus-${uid}" style="font-size:11px; margin-top:4px;">Offline</div>
       </div>
     </div>
   `;
   return card;
 }
 
-/* ============ PER-CARD DOM REFS + LANYARD ============ */
+/* ============ LANYARD WEBSOCKET INTEGRATION ============ */
 function setupCard(uid, discordId){
   const $ = id => document.getElementById(id);
 
@@ -120,61 +116,69 @@ function setupCard(uid, discordId){
 
   function getStatus(s){
     switch(s){
-      case "online": return ["Online","online"];
-      case "idle": return ["Idle","idle"];
-      case "dnd": return ["Do Not Disturb","dnd"];
-      default: return ["Offline","offline"];
+      case "online": return ["Online", "online"];
+      case "idle": return ["Idle", "idle"];
+      case "dnd": return ["Do Not Disturb", "dnd"];
+      default: return ["Offline", "offline"];
     }
   }
 
   function updateUI(d){
     if(!d?.discord_user) return;
-    const u=d.discord_user;
+    const u = d.discord_user;
 
+    // Avatar calculation
     if(u.avatar){
-      const url=`https://cdn.discordapp.com/avatars/${discordId}/${u.avatar}.${u.avatar.startsWith("a_")?"gif":"png"}`;
-      DOM.avatar.src=url;
-      DOM.cardAvatar.src=url;
+      const ext = u.avatar.startsWith("a_") ? "gif" : "png";
+      const url = `https://cdn.discordapp.com/avatars/${discordId}/${u.avatar}.${ext}`;
+      DOM.avatar.src = url;
+      DOM.cardAvatar.src = url;
+    } else {
+      const defaultUrl = `https://cdn.discordapp.com/embed/avatars/${(BigInt(discordId) >> 22n) % 5n}.png`;
+      DOM.avatar.src = defaultUrl;
+      DOM.cardAvatar.src = defaultUrl;
     }
 
-    const name=u.global_name||u.username||"user";
-    DOM.cardName.innerText=name;
-    DOM.username.innerText="@"+u.username;
+    const name = u.global_name || u.username || "User";
+    DOM.cardName.innerText = name;
+    DOM.username.innerText = "@" + u.username;
 
-    const s=d.discord_status||"offline";
-    DOM.status.className="status-dot "+s;
+    const s = d.discord_status || "offline";
+    const [t, classStyle] = getStatus(s);
 
-    const [t,c]=getStatus(s);
-    DOM.statusText.innerText=t;
+    DOM.status.className = "status-dot " + classStyle;
+    DOM.statusText.innerText = t;
   }
 
   function connectLanyard(){
-    const ws=new WebSocket("wss://api.lanyard.rest/socket");
+    const ws = new WebSocket("wss://api.lanyard.rest/socket");
 
-    ws.onopen=()=>{
+    ws.onopen = () => {
       ws.send(JSON.stringify({
-        op:2,
-        d:{subscribe_to_id:discordId}
+        op: 2,
+        d: { subscribe_to_id: discordId }
       }));
     };
 
-    ws.onmessage=e=>{
-      const m=JSON.parse(e.data);
-      if(m.t==="INIT_STATE"||m.t==="PRESENCE_UPDATE"){
+    ws.onmessage = e => {
+      const m = JSON.parse(e.data);
+      if(m.t === "INIT_STATE" || m.t === "PRESENCE_UPDATE"){
         updateUI(m.d);
       }
     };
 
-    ws.onclose=()=>setTimeout(connectLanyard,3000);
+    ws.onclose = () => setTimeout(connectLanyard, 3000);
   }
 
-  window.__lanyardConnections = window.__lanyardConnections || [];
-  window.__lanyardConnections.push(connectLanyard);
+  // Connect automatically on page load
+  connectLanyard();
 }
 
-/* ============ ENTER (click sa splash screen) ============ */
+/* ============ SPLASH SCREEN CLICK TO START MUSIC ============ */
 document.getElementById("overlay").addEventListener("click", () => {
   document.getElementById("overlay").style.display = "none";
-  document.getElementById("bg-music").play().catch(()=>{});
-  (window.__lanyardConnections || []).forEach(fn => fn());
+  const audio = document.getElementById("bg-music");
+  if(audio){
+    audio.play().catch(err => console.log("Autoplay prevented:", err));
+  }
 });
